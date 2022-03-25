@@ -1,0 +1,52 @@
+SQL> select * from emp;
+
+     EMPID EMPNAME              DOB             PHNO JOINDATE         SAL
+---------- -------------------- --------- ---------- --------- ----------
+         1 chaithu              09-DEC-98    9999897 01-JAN-19      30000
+         2 chavi                19-JAN-00    9923417 23-MAR-20      35000
+         3 chamu                29-MAR-97      46417 05-MAY-21      40000
+         4 chanti               27-MAY-01     987417 15-APR-20      45000
+         5 chinni               05-FEB-00     765417 25-JAN-22      50000
+
+SQL> create trigger disal
+  2  before update on emp
+  3  for each row
+  4  when(new.empid>1)
+  5  declare
+  6  dbal int;
+  7  begin
+  8  dbal:=:new.sal-:old.sal;
+  9  dbms_output.put_line('old sal:'||:old.sal);
+ 10  dbms_output.put_line('new sal:'||:new.sal);
+ 11  dbms_output.put_line('balance sal:'||dbal);
+ 12  end;
+ 13  /
+
+Trigger created.
+SQL> declare
+  2  subs int;
+  3  begin
+  4  update emp set sal=sal+1500;
+  5  if sql%notfound then
+  6  dbms_output.put_line('no sal update');
+  7  elsif sql%found then
+  8  subs:=sql%rowcount;
+  9  dbms_output.put_line(subs||'student fees updated');
+ 10  end if;
+ 11  end;
+ 12  /
+old sal:35000
+new sal:36500
+balance sal:1500
+old sal:40000
+new sal:41500
+balance sal:1500
+old sal:45000
+new sal:46500
+balance sal:1500
+old sal:50000
+new sal:51500
+balance sal:1500
+5student fees updated
+
+PL/SQL procedure successfully completed.
